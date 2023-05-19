@@ -25,57 +25,42 @@ public class RpcServerProvider {
     /**
      * 端口号
      */
-    private int port;
+    private final int port;
 
     /**
      * boos
      */
-    private EventLoopGroup eventLoopGroupBoss;
+    private final EventLoopGroup eventLoopGroupBoss;
 
     /**
      * work
      */
-    private EventLoopGroup eventLoopGroupWorker;
+    private final EventLoopGroup eventLoopGroupWorker;
 
     /**
      * Netty的编解码器 内置Handler通过这个线程组服务
      */
-    private EventLoopGroup eventLoopGroupHandler;
+    private final EventLoopGroup eventLoopGroupHandler;
 
     /**
      * service
      */
-    private EventLoopGroup eventLoopGroupService;
-
-    /**
-     * word thread number
-     */
-    private int workerThreads;
-
-    /**
-     * handler thread number
-     */
-    private int handlerThreads;
-
-    /**
-     * service thread number
-     */
-    private int serviceThreads;
+    private final EventLoopGroup eventLoopGroupService;
 
     /**
      * register
      */
-    private Registry registry;
+    private final Registry registry;
 
     /**
      * serverBootstrap
      */
-    private ServerBootstrap serverBootstrap;
+    private final ServerBootstrap serverBootstrap;
 
     /**
      * key = 服务的接口, value = 服务对象
      */
-    private Map<String, Object> exposeBeans;
+    private final Map<String, Object> exposeBeans;
 
     /**
      * 启动状态
@@ -94,16 +79,12 @@ public class RpcServerProvider {
     public RpcServerProvider(int port, int workerThreads, int handlerThreads, int serviceThreads, Registry registry, Map<String, Object> exposeBeans) {
         // 设置端口
         this.port = port;
-        // 对应的工作线程
-        this.workerThreads = workerThreads;
-        this.handlerThreads = handlerThreads;
-        this.serviceThreads = serviceThreads;
 
         // 线程组
         this.eventLoopGroupBoss = new NioEventLoopGroup(1);
-        this.eventLoopGroupWorker = new NioEventLoopGroup(this.workerThreads);
-        this.eventLoopGroupHandler = new DefaultEventLoopGroup(this.handlerThreads);
-        this.eventLoopGroupService = new DefaultEventLoopGroup(this.serviceThreads);
+        this.eventLoopGroupWorker = new NioEventLoopGroup(workerThreads);
+        this.eventLoopGroupHandler = new DefaultEventLoopGroup(handlerThreads);
+        this.eventLoopGroupService = new DefaultEventLoopGroup(serviceThreads);
 
         // 注册器
         this.registry = registry;
@@ -128,10 +109,9 @@ public class RpcServerProvider {
 
         serverBootstrap.channel(NioServerSocketChannel.class);
         serverBootstrap.group(eventLoopGroupBoss, eventLoopGroupWorker);
-        serverBootstrap.childHandler(new RpcServerProviderInitializer());
+        serverBootstrap.childHandler(new RpcServerProviderInitializer(eventLoopGroupHandler, eventLoopGroupService, exposeBeans));
 
         final ChannelFuture channelFuture = serverBootstrap.bind(port);
-
         // GenericFutureListener
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
