@@ -1,4 +1,4 @@
-package com.ytrue.rpc.network.server;
+package com.ytrue.rpc.transport;
 
 import com.ytrue.rpc.protocol.RpcRequest;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,7 +23,7 @@ public class RpcRequestInboundHandler extends SimpleChannelInboundHandler<RpcReq
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcRequest rpcRequest) throws Exception {
 
-        // TODO 待开发
+        // TODO 待开发这里调取代码
 
         System.out.println(exposeBean);
     }

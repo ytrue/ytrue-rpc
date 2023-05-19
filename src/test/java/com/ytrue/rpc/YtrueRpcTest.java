@@ -1,6 +1,10 @@
 package com.ytrue.rpc;
 
+import com.ytrue.rpc.server.RpcServerProvider;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 /**
  * @author ytrue
@@ -10,7 +14,10 @@ import org.junit.Test;
 public class YtrueRpcTest {
 
     @Test
-    public void test01() {
-        System.out.println(123);
+    public void test01() throws IOException, InterruptedException {
+        RpcServerProvider rpcServerProvider = new RpcServerProvider(null,null);
+        rpcServerProvider.startServer();
+
+        System.in.read();
     }
 }

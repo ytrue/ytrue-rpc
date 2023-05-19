@@ -1,4 +1,4 @@
-package com.ytrue.rpc.network.server;
+package com.ytrue.rpc.server;
 
 import com.ytrue.rpc.register.HostAndPort;
 import com.ytrue.rpc.register.Registry;
@@ -12,6 +12,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class RpcServerProvider {
 
 
     public RpcServerProvider(Registry registry, Map<String, Object> exposeBeans) {
-        this(9992, 1, 1, 1, registry, exposeBeans);
+        this(1010, 1, 1, 1, registry, exposeBeans);
     }
 
     public RpcServerProvider(int port, Registry registry, Map<String, Object> exposeBeans) {
@@ -162,5 +163,14 @@ public class RpcServerProvider {
         for (String targetInterface : keySet) {
             registry.registerService(targetInterface, hostAndPort);
         }
+    }
+
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+
+        HashMap<String , Object> map = new HashMap<>();
+
+        RpcServerProvider rpcServerProvider = new RpcServerProvider(null, map);
+        rpcServerProvider.startServer();
+
     }
 }

@@ -71,6 +71,7 @@ public class RpcMessageToMessageCodec extends MessageToMessageCodec<ByteBuf, Pro
      */
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+
         //获取魔术 进行魔术的对比
         CharSequence charSequence = byteBuf.readCharSequence(9, StandardCharsets.UTF_8);
         if (!charSequence.equals(Protocol.MAGIC_NUM)) {
@@ -89,7 +90,6 @@ public class RpcMessageToMessageCodec extends MessageToMessageCodec<ByteBuf, Pro
 
         // 读取数据
         byteBuf.readBytes(bytes);
-
 
         //2. 反序列化操作
         Protocol protocol = serializer.decode(bytes);
