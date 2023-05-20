@@ -16,6 +16,8 @@ import lombok.ToString;
 @ToString
 public class RpcResponse implements Protocol {
 
+    private String requestId;
+
     /**
      * 结果
      */

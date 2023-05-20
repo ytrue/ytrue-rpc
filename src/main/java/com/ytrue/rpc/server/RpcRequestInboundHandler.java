@@ -64,6 +64,8 @@ public class RpcRequestInboundHandler extends SimpleChannelInboundHandler<RpcReq
             log.error("method invoke error", e);
             result.setException(e);
         }
+        // 设置id
+        result.setRequestId(rpcRequest.getRequestId());
         return result;
     }
 }

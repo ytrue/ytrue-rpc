@@ -1,5 +1,7 @@
 package com.ytrue.rpc.transport;
 
+import com.ytrue.rpc.future.SyncWrite;
+import com.ytrue.rpc.future.SyncWriteFuture;
 import com.ytrue.rpc.protocol.RpcRequest;
 import com.ytrue.rpc.protocol.RpcResponse;
 import com.ytrue.rpc.register.HostAndPort;
@@ -41,8 +43,8 @@ public class NettyTransport implements Transport {
         bootstrap.handler(rpcClientChannelInitializer);
 
         ChannelFuture channelFuture = bootstrap.connect(hostAndPort.getHostName(), hostAndPort.getPort()).sync();
-        channelFuture.channel().closeFuture().sync();
-        return rpcClientChannelInitializer.getResponse();
+        // 发送数据
+        return new SyncWrite().writeAndSync(channelFuture.channel(), request, Integer.MAX_VALUE);
     }
 
     @Override

@@ -16,6 +16,8 @@ import lombok.ToString;
 @ToString
 public class RpcRequest implements Protocol {
 
+    private String requestId;
+
     /**
      * 目标类
      */
