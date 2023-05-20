@@ -2,6 +2,8 @@ package com.ytrue.rpc.server;
 
 import com.ytrue.rpc.register.HostAndPort;
 import com.ytrue.rpc.register.Registry;
+import com.ytrue.rpc.service.OrderService;
+import com.ytrue.rpc.service.OrderServiceImpl;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -161,13 +163,14 @@ public class RpcServerProvider {
         //2 遍历这些对象通过registry进行注册
         HostAndPort hostAndPort = new HostAndPort(hostAddress, port);
         for (String targetInterface : keySet) {
-            registry.registerService(targetInterface, hostAndPort);
+            //registry.registerService(targetInterface, hostAndPort);
         }
     }
 
     public static void main(String[] args) throws UnknownHostException, InterruptedException {
 
-        HashMap<String , Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>(2);
+        map.put(OrderService.class.getName(), new OrderServiceImpl());
 
         RpcServerProvider rpcServerProvider = new RpcServerProvider(null, map);
         rpcServerProvider.startServer();
