@@ -11,6 +11,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.Set;
@@ -69,12 +70,13 @@ public class RpcServerProvider {
 
 
     public RpcServerProvider(Registry registry, Map<String, Object> exposeBeans) {
-        this(1010, 1, 1, 1, registry, exposeBeans);
+        this(NetUtil.getUsablePort(5001), 1, 1, 1, registry, exposeBeans);
     }
 
     public RpcServerProvider(int port, Registry registry, Map<String, Object> exposeBeans) {
         this(port, 1, 1, 1, registry, exposeBeans);
     }
+
 
     public RpcServerProvider(int port, int workerThreads, int handlerThreads, int serviceThreads, Registry registry, Map<String, Object> exposeBeans) {
         // 设置端口
@@ -160,4 +162,6 @@ public class RpcServerProvider {
             registry.registerService(targetInterface, hostAndPort);
         }
     }
+
+
 }
