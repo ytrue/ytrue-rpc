@@ -28,7 +28,7 @@ public class YtrueServerRpcTest {
 public class YtrueClientRpcTest {
     public static void main(String[] args) {
         JdkProxy jdkProxy = new JdkProxy(OrderService.class);
-        // 设计集群
+        // 设置集群，支持快速失败，快速跳过
         jdkProxy.setCluster(new FailOverCluster());
         // 设置传输
         jdkProxy.setTransport(new NettyTransport());
