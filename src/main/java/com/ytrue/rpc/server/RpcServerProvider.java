@@ -2,8 +2,7 @@ package com.ytrue.rpc.server;
 
 import com.ytrue.rpc.register.HostAndPort;
 import com.ytrue.rpc.register.Registry;
-import com.ytrue.rpc.service.OrderService;
-import com.ytrue.rpc.service.OrderServiceImpl;
+import com.ytrue.rpc.utils.NetUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -13,8 +12,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -100,11 +97,8 @@ public class RpcServerProvider {
 
     /**
      * 启动服务
-     *
-     * @throws InterruptedException
-     * @throws UnknownHostException
      */
-    public void startServer() throws InterruptedException, UnknownHostException {
+    public void startServer() {
         // 校验，防止多次启动，出现端口占用
         if (isStarted) {
             throw new RuntimeException("server is already started....");
@@ -119,7 +113,7 @@ public class RpcServerProvider {
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
                 //2服务注册功能
-                registerServices(InetAddress.getLocalHost().getHostAddress(), port, exposeBeans, registry);
+                registerServices(NetUtil.getHost(), port, exposeBeans, registry);
                 isStarted = true;
 
                 //监听关闭
@@ -163,17 +157,7 @@ public class RpcServerProvider {
         //2 遍历这些对象通过registry进行注册
         HostAndPort hostAndPort = new HostAndPort(hostAddress, port);
         for (String targetInterface : keySet) {
-            //registry.registerService(targetInterface, hostAndPort);
+            registry.registerService(targetInterface, hostAndPort);
         }
-    }
-
-    public static void main(String[] args) throws UnknownHostException, InterruptedException {
-
-        HashMap<String, Object> map = new HashMap<>(2);
-        map.put(OrderService.class.getName(), new OrderServiceImpl());
-
-        RpcServerProvider rpcServerProvider = new RpcServerProvider(null, map);
-        rpcServerProvider.startServer();
-
     }
 }

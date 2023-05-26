@@ -11,7 +11,6 @@ import lombok.ToString;
  * @description 请求参数
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class RpcRequest implements Protocol {
@@ -37,4 +36,11 @@ public class RpcRequest implements Protocol {
      * 方法实参
      */
     private Object[] args;
+
+    public RpcRequest(Class targetInterface, String methodName, Class<?>[] parameterTypes, Object[] args) {
+        this.targetInterface = targetInterface;
+        this.methodName = methodName;
+        this.parameterTypes = parameterTypes;
+        this.args = args;
+    }
 }

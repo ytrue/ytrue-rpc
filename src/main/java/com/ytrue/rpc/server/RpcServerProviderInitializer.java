@@ -39,7 +39,5 @@ class RpcServerProviderInitializer extends ChannelInitializer<NioSocketChannel> 
         pipeline.addLast(this.eventLoopGroupService, new RpcMessageToMessageCodec(new HessianSerializer()));
         //4。 RPC功能的调用 eventLoopGroupService
         pipeline.addLast(this.eventLoopGroupService, new RpcRequestInboundHandler(exposeBean));
-
-
     }
 }
